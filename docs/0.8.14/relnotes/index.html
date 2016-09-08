@@ -84,6 +84,7 @@ pageTracker._trackPageview();
 More information in <a class="reference internal" href="../manual/cfg-buildsteps.html#handle-related-builds"><span class="std std-ref">the manual</span></a>.</li>
 <li><a class="reference internal" href="../manual/cfg-statustargets.html#buildbot.status.github.GitHubStatus" title="buildbot.status.github.GitHubStatus"><code class="xref py py-class docutils literal"><span class="pre">GitHubStatus</span></code></a> now accepts a <code class="docutils literal"><span class="pre">context</span></code> parameter to be passed to the GitHub Status API.</li>
 <li><a class="reference internal" href="../manual/cfg-schedulers.html#sched-Triggerable" title="Triggerable"><code class="xref bb bb-sched docutils literal"><span class="pre">Triggerable</span></code></a> now accepts a <code class="docutils literal"><span class="pre">reason</span></code> parameter.</li>
+<li><code class="docutils literal">buildbot.status.web.hooks.github.GitHubEventHandler</code> now contains a <code class="docutils literal">github_distinct</code> property indicating whether or not a commit already existed in the repo when the hook is received.</li>
 </ul>
 </div>
 <div class="section" id="fixes">
@@ -94,6 +95,7 @@ More information in <a class="reference internal" href="../manual/cfg-buildsteps
 </div>
 <div class="section" id="deprecations-removals-and-non-compatible-changes">
 <h3>Deprecations, Removals, and Non-Compatible Changes<a class="headerlink" href="#deprecations-removals-and-non-compatible-changes" title="Permalink to this headline">¶</a></h3>
+<li>By default, non-distinct commits received via <code class="docutils literal"><span class="pre">buildbot.status.web.hooks.github.GitHubEventHandler</span></code> now get recorded as a Change. In this way, a commit pushed to a branch that is not being watched (e.g. a dev branch) will still get acted on when it is later pushed to a branch that is being watched (e.g. master). In the past, such a commit would get ignored and not built because it was non-distinct. To disable this behavior and revert to the old behavior, install a <a class="reference internal" href="../manual/cfg-schedulers.html#change-filters" title="ChangeFilter "><code class="xref bb bb-step docutils literal"><span class="pre">ChangeFilter</span></code></a> that checks the <code class="docutils literal"><span class="pre">github_distinct</span></code> property: <code class="docutils literal"><span class="pre">ChangeFilter(filter_fn=lambda c: c.properties.getProperty('github_distinct'))</span></code></li>
 </div>
 <div class="section" id="changes-for-developers">
 <h3>Changes for Developers<a class="headerlink" href="#changes-for-developers" title="Permalink to this headline">¶</a></h3>
